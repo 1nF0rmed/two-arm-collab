@@ -4,9 +4,10 @@ from dotenv import load_dotenv
 
 import numpy as np
 import rerun as rr
-from lerobot.common.utils.utils import log_say
+from lerobot.common.utils.utils import log_say, init_logging
 from lerobot.common.utils.control_utils import init_keyboard_listener
 from lerobot.common.utils.visualization_utils import _init_rerun
+from lerobot.common.datasets.utils import build_dataset_frame, hw_to_dataset_features
 from lerobot.common.cameras.opencv.configuration_opencv import OpenCVCameraConfig
 from lerobot.common.teleoperators.so101_leader import SO101LeaderConfig, SO101Leader
 from lerobot.common.robots.so101_follower import SO101FollowerConfig, SO101Follower
@@ -40,6 +41,7 @@ teleop_config = SO101LeaderConfig(
 )
 
 def teleop():
+    init_logging()
     robot = SO101Follower(robot_config)
     teleop = SO101Leader(teleop_config)
 
@@ -77,18 +79,29 @@ def teleop():
 
     log_say("Exiting", True)
 
-def record():
+def record(resume: bool):
+    # TODO: Complete this function
     pass
+    init_logging()
+    robot = SO101Follower(robot_config)
+    teleop = SO101Leader(teleop_config)
+    
+    action_features = hw_to_dataset_features(robot.action_features, "action", True) # True to store video frames
+    observation_features = hw_to_dataset_features(robot.observation_features, "observation", True) # True to store video frames
+
+    dataset_features = {**action_features, **observation_features}
+
 
 def main():
     parser = argparse.ArgumentParser(description="Robot box pickup script")
     parser.add_argument("--mode", type=str, default="teleop", choices=["teleop", "record"])
+    parser.add_argument("--resume", type=bool, default=False)
     args = parser.parse_args()
 
     if args.mode == "teleop":
         teleop()
     elif args.mode == "record":
-        record()
+        record(resume=args.resume)
 
 if __name__ == "__main__":
     main()
