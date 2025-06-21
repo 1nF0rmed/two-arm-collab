@@ -80,6 +80,23 @@ def teleop():
     log_say("Exiting", True)
 
 def record(resume: bool):
+    """
+    Run this command for now
+    python -m lerobot.record \
+    --robot.type=so101_follower \
+    --robot.port=/dev/tty.usbmodem5A460815141 \
+    --robot.id=green \
+    --robot.cameras="{ wrist: {type: opencv, index_or_path: 3, width: 640, height: 480, fps: 30}, top: {type: opencv, index_or_path: 1, width: 640, height: 480, fps: 30}}" \
+    --teleop.type=so101_leader \
+    --teleop.port=/dev/tty.usbmodem5A460827091 \
+    --teleop.id=red \
+    --display_data=true \
+    --dataset.repo_id={your_huggingface_username}/pick_up_and_drop_cube \
+    --dataset.num_episodes=5 \
+    --dataset.single_task="Pickup and drop cube" \
+    --resume=true (use false the first time, then true for every subsequent time)
+    """
+    
     # TODO: Complete this function
     pass
     init_logging()
